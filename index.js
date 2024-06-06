@@ -1,3 +1,8 @@
+async function fetchWords() {
+    const response = await fetch('https://raw.githubusercontent.com/AlizValko/wordleGame/main/words.txt');
+    const text = await response.text();
+    return text.split('\n').map(word => word.trim());
+}
 const dictionary=['house','mouse','crane','happy','shoot','equal'];
 /*var fs = require("fs");
 fs.readFile("./mytext.txt", function(text){
