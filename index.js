@@ -3,14 +3,17 @@ async function fetchWords() {
     const text = await response.text();
     return text.split('\n').map(word => word.trim());
 }
-const dictionary=['house','mouse','crane','happy','shoot','equal'];
-/*var fs = require("fs");
-fs.readFile("./mytext.txt", function(text){
-    var textByLine = text.split("\n")
-});
-console.log(textByLine);*/
+let dictionary=[];
+async function startup() {
+    const game=document.getElementById("game");
+    drawGrid(game);
+    registerKeyboardEvents();
+    dictionary = await fetchWords();
+    state.secret = dictionary[Math.floor(Math.random() * dictionary.length)];
+    console.log(`Secret word: ${state.secret}`);
+}
 const state={
-    secret: dictionary[Math.floor(Math.random()*dictionary.length)],
+    secret: '',
     grid: Array(6)
         .fill()
         .map(()=>Array(5).fill('')),
@@ -63,17 +66,18 @@ function registerKeyboardEvents(){
         }
         if(isLetter(key)){
             addLetter(key);
+            hideInitialText();
         }
         updateGrid();
     };
 }
-function cursor(row, col){
-    //const row=state.currentRow;
-    //const col=state.currentCol;
-    //cursor(state.currentRow,state.currentCol)
-    const box=document.getElementById(`box${row}${col+1}`);
-    box.classList.add('cursed');
+function hideInitialText() {
+    const initialText = document.getElementById('initial-text');
+    if (initialText) {
+        initialText.style.display = 'none';
+    }
 }
+
 function getCurrentWord(){
     return state.grid[state.currentRow].reduce((prev,curr)=>prev+curr);
 }
@@ -98,12 +102,28 @@ function revealWord(guess){
     const isWinner=state.secret===guess;
     const isGameOver=state.currentRow===5;
     if(isWinner){
-        alert('Congratulatioins'); //change to confetti animation later
+        showPopup('Congratulations! Do you know what this word means?');
     }
     if(isGameOver){
-        alert(`No idiot, the word was ${state.secret}.`) //change to pop-up?
+        showPopup(`Nope, the word was ${state.secret}.`);
     }
 }
+function search(){
+    window.open('http://google.com/search?q='+state.secret+" definition");
+}
+function showPopup(message) {
+    const popup = document.getElementById('popup');
+    const popupContent = document.querySelector('.popup-content p');
+    popupContent.textContent = message;
+    popup.style.display = 'flex';
+}
+
+function hidePopup() {
+    const popup = document.getElementById('popup');
+    popup.style.display = 'none';
+}
+document.getElementById('search').addEventListener('click', search);
+document.getElementById('close-popup').addEventListener('click', hidePopup);
 function isLetter(key){
     return key.length===1 && key.match(/[a-z]/i);
 }
@@ -117,9 +137,5 @@ function removeLetter(){
     state.grid[state.currentRow][state.currentCol-1]='';
     state.currentCol--;
 }
-function startup() {
-    const game=document.getElementById("game");
-    drawGrid(game);
-    registerKeyboardEvents();
-}
+
 startup();
