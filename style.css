@@ -1,0 +1,58 @@
+html,
+body{
+    background: var(--default);
+}
+:root{
+    --default: #faf3df;
+    --empty: #4d4d4d;
+    --wrong: #cf027d;
+    --right: #03ae6f;
+}
+#game{
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 600px;
+}
+.grid{
+    display: grid;
+    grid-template-rows: repeat(6, auto);
+    grid-template-columns: repeat(5, auto);
+}
+.solutionGrid{
+    display: grid;
+    grid-template-rows: repeat(6, auto);
+    grid-template-columns: repeat(5, auto);
+}
+.box{
+    width: 60px;
+    height: 60px;
+    border: 0px solid var(--empty);
+    margin: 4px;
+    color: var(--empty);
+    text-transform: uppercase;
+    font-family: "broadacre-regular-0", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    display: grid;
+    place-items: center;
+    font-size: 2.4rem;
+}
+.box.empty{
+    background-color: var(--default);
+}
+.box.wrong{
+    color: var(--wrong);
+    background-color: var(--default);
+}
+.box.right{
+    color: var(--right);
+    background-color: var(--default);
+}
+.box.cursed{
+    border-left-width: 3px solid var(--empty);
+}
+#solBox0,#solBox1,
+#solBox2,#solBox3,#solBox4{
+    border-bottom-width: 2px solid var(--empty);
+}
