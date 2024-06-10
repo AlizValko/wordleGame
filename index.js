@@ -3,12 +3,19 @@ async function fetchWords() {
     const text = await response.text();
     return text.split('\n').map(word => word.trim());
 }
+async function fetchGuessWords() {
+    const response = await fetch("https://gist.githubusercontent.com/dracos/dd0668f281e685bad51479e5acaadb93/raw/6bfa15d263d6d5b63840a8e5b64e04b382fdb079/valid-wordle-words.txt");
+    const text = await response.text();
+    return text.split('\n').map(word => word.trim());
+}
 let dictionary=[];
+let guessDictionary=[];
 async function startup() {
     const game=document.getElementById("game");
     drawGrid(game);
     registerKeyboardEvents();
     dictionary = await fetchWords();
+    guessDictionary= await fetchGuessWords();
     state.secret = dictionary[Math.floor(Math.random() * dictionary.length)];
     console.log(`Secret word: ${state.secret}`);
 }
@@ -82,7 +89,7 @@ function getCurrentWord(){
     return state.grid[state.currentRow].reduce((prev,curr)=>prev+curr);
 }
 function isWordValid(word){
-    return dictionary.includes(word);
+    return guessDictionary.includes(word);
 }
 function revealWord(guess){
     const row=state.currentRow;
